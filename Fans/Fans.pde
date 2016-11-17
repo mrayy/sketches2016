@@ -1,3 +1,5 @@
+
+
 float fan2phi(int fan, int fans)
 {
   return PI * 2 * fan / fans;
@@ -29,37 +31,56 @@ void drawRing(float l0, float l1, int fans)
   }
 }
 
+
+
+float x1=0;
+float x2=0;
+float x3=0;
+
 void setup()
 {
   size(500, 500);
-  frameRate(2);
+  frameRate(30);
   
   smooth();
   strokeWeight(0.5);
   noFill();
   stroke(0);
+  
+  x1=random(0,1);
+  x2=random(0,1);
+  x3=random(0,1);
 }
+
+float pnoise(float x,float min,float max)
+{
+  return noise(x)*(max-min)+min;
+}
+
 
 void draw()
 {
   background(255);
 
-  int fans = 32;
-  int lines = 32;
+  int fans = 50;
+  int lines = 20;
 
   for (int i = 0; i < lines; i++)
   {
-    float l0 = random(0.1, 0.6);
-    float l1 = abs(l0 + random(-0.3, 0.3));
+    float l0 = pnoise(x1+i*2/(float)lines,0.1,pnoise(x3,0.5,0.8));
+    float l1=abs(l0+pnoise(x1+i*2/(float)lines,-0.3,0.3));
     drawRing(l0, l1, fans);
   }
 
   for (int i = 0; i < lines * 2; i++)
   {
-    float l0 = random(0.5, 1.5);
-    float l1 = abs(l0 + random(-0.15, 0.15));
+    float l0=pnoise(x2+i*2/(float)lines,pnoise(x3+i/(float)lines,0.2,1),1.5);
+    float l1=abs(l0+pnoise(x2+i*2/(float)lines,-0.15,0.15));
     drawRing(l0, l1, fans * 2);
   }
   
-  saveFrame();
+  x1+=0.01f;
+  x2+=0.015f;
+  x3+=0.02f;
+ // saveFrame();
 }
